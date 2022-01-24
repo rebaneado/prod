@@ -1,23 +1,39 @@
+import 'dart:collection';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prod/model/song_model.dart';
+import 'package:prod/widgets/title_widget.dart';
+import 'package:spotify_sdk/models/image_uri.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
+import 'package:prod/managers/auth_manager.dart';
 
 class HomePageView extends StatefulWidget {
   HomePageView({Key? key}) : super(key: key);
+  Queue<Song> songList = Queue<Song>();
 
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomePageView> {
+  Queue<Song> songList = Queue<Song>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'flutter layout Demo',
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              // CurrentSongTitle(),
+              titleSection,
+              currentSongTitle(),
+              AuthManager(),
+
+              //spotifyImageWidget(),
               // Playlist(),
               // AddRemoveSongButtons(),
               // AudioProgressBar(),
@@ -28,24 +44,48 @@ class _HomeViewState extends State<HomePageView> {
       ),
     );
   }
+
+  Widget currentSongTitle() {
+    if (songList.isEmpty) {
+      print('This is supposed to be a column');
+
+      return const Text('Nothing Currently Playing, no item of songList');
+    } else {
+      String currentSongName = songList.first.getSongName;
+      print('This is if its not empty');
+      return Text('Song Playing: $currentSongName');
+    }
+  }
+
+//this widget is specifically for getting the image of the song
+
+  Widget spotifyImageWidget(ImageUri image) {
+    return FutureBuilder(
+        future: SpotifySdk.getImage(
+          imageUri: image,
+          dimension: ImageDimension.large,
+        ),
+        builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+          if (snapshot.hasData) {
+            return Image.memory(snapshot.data!);
+          } else if (snapshot.hasError) {
+            //setStatus(snapshot.error.toString());
+            return SizedBox(
+              width: ImageDimension.large.value.toDouble(),
+              height: ImageDimension.large.value.toDouble(),
+              child: const Center(child: Text('Error getting image')),
+            );
+          } else {
+            return SizedBox(
+              width: ImageDimension.large.value.toDouble(),
+              height: ImageDimension.large.value.toDouble(),
+              child: const Center(child: Text('Getting image...')),
+            );
+          }
+        });
+  }
 }
 
-// class CurrentSongTitle extends StatelessWidget {
-//   const CurrentSongTitle({Key? key}) : super(key: key);
-//   @override
-//   Widget build(BuildContext context) {
-//     final pageManager = getIt<PageManager>();
-//     return ValueListenableBuilder<String>(
-//       valueListenable: pageManager.currentSongTitleNotifier,
-//       builder: (_, title, __) {
-//         return Padding(
-//           padding: const EdgeInsets.only(top: 8.0),
-//           child: Text(title, style: TextStyle(fontSize: 40)),
-//         );
-//       },
-//     );
-//   }
-// }
 
 // class Playlist extends StatelessWidget {
 //   const Playlist({Key? key}) : super(key: key);

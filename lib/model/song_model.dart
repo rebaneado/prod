@@ -6,6 +6,7 @@ class Song {
   String webURL;
   String songID;
   String album;
+  String imageURI;
 
   String get getSongName {
     return this.songName;
@@ -27,9 +28,14 @@ class Song {
     return this.album;
   }
 
+  String get getArtwork {
+    return this.imageURI;
+  }
+
   void set setSongID(String spotifySongID) {
     this.songID = spotifySongID;
   }
 
-  Song(this.songName, this.album, this.artist, this.songID, this.webURL);
+  Song(this.songName, this.album, this.artist, this.songID, this.webURL,
+      this.imageURI);
 }
