@@ -1,6 +1,13 @@
+/*
+
+II think i pulled this in as an example  - not 100% sure but seems im not using this 
+
+*/
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prod/views/login_view.dart';
+import 'package:prod/views/profile_view.dart';
 import 'package:prod/views/search_view.dart';
 
 void main() {
@@ -25,9 +32,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+// This below cvreates the 2 tabs that are present in the
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _tabs = [
     LoginView(), // see the HomeTab class below
+    Profile(),
     SearchView() // see the SettingsTab class below
   ];
 
@@ -42,7 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.settings), label: 'Settings')
+                  icon: Icon(Icons.settings), label: 'Settings'),
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search')
             ],
           ),
           tabBuilder: (BuildContext context, index) {

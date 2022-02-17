@@ -8,6 +8,8 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+
     return const MaterialApp(
       title: 'afadsfda',
       home: SearchScaffold(),
@@ -34,22 +36,28 @@ class SearchScaffoldState extends State<SearchScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [_searchForm(context), _goBackToSomething(context)],
-      ),
-    ));
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Center(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [_searchForm(context), _goBackToSomething(context)],
+            ),
+          ),
+        ));
   }
 
   Widget _searchForm(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+      child: Expanded(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: (MediaQuery.of(context).size.height) * .120,
+            ),
             _songNameField(context),
             _artistNameField(),
             _songID(),
@@ -61,97 +69,114 @@ class SearchScaffoldState extends State<SearchScaffold> {
   }
 
   Widget _songNameField(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        icon: Icon(Icons.person),
-        hintText: 'Song Name',
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          icon: Icon(Icons.person),
+          hintText: 'Song Name',
+        ),
+        validator: (value) {
+          if (value == null) {
+            return "Name of Song";
+          }
+          return null;
+        },
+        onChanged: (value) {
+          songName = value;
+          //print('THIS IS NOT AWAITING SHIT $songName');
+        },
       ),
-      validator: (value) {
-        if (value == null) {
-          return "Name of Song";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        songName = value;
-      },
     );
   }
 
   Widget _webURL() {
-    return TextFormField(
-      decoration: InputDecoration(
-        icon: Icon(Icons.person),
-        hintText: 'webURL',
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          icon: Icon(Icons.person),
+          hintText: 'webURL',
+        ),
+        validator: (value) {
+          if (value == null) {
+            return "WEB URL";
+          }
+          return null;
+        },
+        onChanged: (value) {
+          webURL = value;
+        },
       ),
-      validator: (value) {
-        if (value == null) {
-          return "WEB URL";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        webURL = value;
-      },
     );
   }
 
   Widget _artistNameField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        icon: Icon(Icons.person),
-        hintText: 'Artist name',
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          icon: Icon(Icons.person),
+          hintText: 'Artist name',
+        ),
+        validator: (value) {
+          if (value == null) {
+            return "Artists Can not be emmpty";
+          }
+          return null;
+        },
+        onChanged: (value) {
+          artist = value;
+        },
       ),
-      validator: (value) {
-        if (value == null) {
-          return "Artists Can not be emmpty";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        artist = value;
-      },
     );
   }
 
   Widget _songID() {
-    return TextFormField(
-      decoration: InputDecoration(
-        icon: Icon(Icons.security),
-        hintText: 'Song ID',
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          icon: Icon(Icons.security),
+          hintText: 'Song ID',
+        ),
+        validator: (value) {
+          if (value == null) {
+            return "password Can not be emmpty";
+          }
+          return null;
+        },
+        onChanged: (value) {
+          songID = value;
+        },
       ),
-      validator: (value) {
-        if (value == null) {
-          return "password Can not be emmpty";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        songID = value;
-      },
     );
   }
 
   Widget _searchButton(BuildContext context) {
-    return ElevatedButton(
-        onPressed: () {
-          //songList.add()
-          print(songName);
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: ElevatedButton(
+          onPressed: () {
+            //songList.add()
+            print('So this is the updated song name thing aparently $songName');
 
-          if (_formKey.currentState!.validate()) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePageView(), //TODO::::
-              ),
-            );
-          }
-        },
-        child: const Text('Search'));
+            if (_formKey.currentState!.validate()) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePageView(), //TODO::::
+                ),
+              );
+            }
+          },
+          child: const Text('Search')),
+    );
   }
 
   Widget _goBackToSomething(BuildContext context) {
-    return SafeArea(
+    return Container(
+        alignment: Alignment.bottomCenter,
         child: TextButton(
             child: Text('TODO gp back to something>?'),
             onPressed: () {

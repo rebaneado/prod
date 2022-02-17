@@ -23,7 +23,7 @@ class SignUpView extends StatelessWidget {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -11,7 +11,7 @@ Widget titleSection = Container(
           children: [
             /*2*/
             Container(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(8),
               child: const Text(
                 'Welcome to Beta verdsion! @Rebanned',
                 style: TextStyle(

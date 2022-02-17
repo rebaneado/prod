@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:prod/model/song_model.dart';
 import 'package:prod/widgets/title_widget.dart';
 import 'package:spotify_sdk/models/image_uri.dart';
+import 'package:spotify_sdk/platform_channels.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:prod/managers/auth_manager.dart';
 
@@ -33,7 +34,10 @@ class _HomeViewState extends State<HomePageView> {
               currentSongTitle(),
               AuthManager(),
 
-              //spotifyImageWidget(),
+              ///TODO: this should be a button to be pressed instead of running automaticallhy
+              songInformation(),
+              //spotifyImageWidget(SpotifySdk.getImage(imageUri: Player)),
+
               // Playlist(),
               // AddRemoveSongButtons(),
               // AudioProgressBar(),
@@ -83,6 +87,16 @@ class _HomeViewState extends State<HomePageView> {
             );
           }
         });
+  }
+
+  Widget songInformation() {
+    return Column(
+
+        // Text('RepeatMode: ${playerState.playbackOptions.repeatMode}'),
+        // Text('Image URI: ${track.imageUri.raw}'),
+        // Text('Is episode? ${track.isEpisode}'),
+        // Text('Is podcast? ${track.isPodcast}'),
+        );
   }
 }
 
