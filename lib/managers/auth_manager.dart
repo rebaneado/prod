@@ -1,80 +1,90 @@
 import 'dart:developer';
 
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+//import 'package:spotify/spotify.dart'; //this one too this one was the latest maybe idk
 import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_context.dart';
-import 'package:spotify_sdk/models/player_state.dart';
+
+//import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AuthManager extends StatelessWidget {
-  const AuthManager({Key? key}) : super(key: key);
+  AuthManager({Key? key}) : super(key: key);
+  bool _loading = false;
+  late String searchedSongURI, tempSong;
+  late String songString, artistsString;
+
+  Logger logger = Logger(
+    //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
+    printer: PrettyPrinter(
+      methodCount: 2, // number of method calls to be displayed
+      errorMethodCount: 8, // number of method calls if stacktrace is provided
+      lineLength: 120, // width of the output
+      colors: true, // Colorful log messages
+      printEmojis: true, // Print an emoji for each log message
+      printTime: true,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    if (SpotifySdk.getPlayerState != null) {
-    } else {
-      ConnectRemote();
-
-      return buildPlayerContextWidget();
-    }
+    connectRemote();
+    //ConnectRemote();
+    return buildPlayerContextWidget();
   }
 
-  Future<void> ConnectRemote() async {
-    await SpotifySdk.getAuthenticationToken(
-        clientId: "ca721ff887074f0699d961c2c1f32bd9",
-        redirectUrl: "spotify-login-sdk-test-app://spotify-login-callback",
-        scope:
-            //'app-remote-control, '
-            //'user-modify-playback-state, '
-            'playlist-read-private, '
-            'playlist-modify-public,user-read-currently-playing');
-    print('THIS IS NOT AWAITING SHIT');
+  Future<String> connectRemote() async {
+    try {
+      var authentificationToken = await SpotifySdk.connectToSpotifyRemote(
+          clientId: 'ca721ff887074f0699d961c2c1f32bd9'.toString(),
+          redirectUrl:
+              'spotify-login-sdk-test-app://spotify-login-callback'.toString(),
+          scope: 'app-remote-control, '
+              //'user-modify-playback-state, '
+              'playlist-read-private, '
+              'playlist-modify-public,user-read-currently-playing');
+      setStatus('Got a token: $authentificationToken');
+      return authentificationToken.toString();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+      return Future.error('$e.code: $e.message');
+    } on MissingPluginException {
+      setStatus('not implemented');
+      return Future.error('not implemented');
+    }
 
-    String clientId = "ca721ff887074f0699d961c2c1f32bd9";
-    String redirectUrl = "spotify-login-sdk-test-app://spotify-login-callback";
+    // print('THIS IS NOT AWAITING SHIT');
+
+    // String clientId = "ca721ff887074f0699d961c2c1f32bd9";
+    // String redirectUrl = "spotify-login-sdk-test-app://spotify-login-callback";
     // String = SpotifySdk.getAuthenticationToken(
     //     clientId: clientId, redirectUrl: redirectUrl).spotifyUri;
-    // print(authToken);
+    // print(authentificationToken);
     // await SpotifySdk.pause();
     //await SpotifySdk.play(spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
 
     ///TODO: use this in my playing method wheveever i am going to maintaing this
   }
 
-  void Name(String searchedSong) {
+  void nameFunc(String searchedSong) {
     SpotifySdk.queue(spotifyUri: searchedSong);
     var asdfwer = SpotifySdk.getPlayerState();
-    print(
-        '------------------------------------------ THis is player state variable $asdfwer');
+    log('data: ----------------------------------------------------------- THis is player state variable $asdfwer');
   }
 
   Future getPlayerState() async {
-    //var adfasd = PlayerState.track;
-    return await SpotifySdk.getPlayerState();
+    try {
+      return await SpotifySdk.getPlayerState();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
   }
-
-  // Widget _buildPlayerStateWidget() {
-  //   StreamBuilder<PlayerState>(
-  //     stream: SpotifySdk.subscribePlayerState(),
-  //     builder: (BuildContext context, AsyncSnapshot<PlayerState> snapshot) {
-  //       var track = snapshot.data?.track;
-  //       ImageUri? currentTrackImageUri = track?.imageUri;
-  //       var playerState = snapshot.data;
-  //       print(
-  //           'This is buildplayerstatewidget track snapshot... i ownder why this does work and the other does not: ${track!.name}'); //THIS WORKS AND I CAN GRAB RIGHT HERE!!!!!!!!!!!!
-  //     },
-  //   );
-
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.start,
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: <Widget>[
-  //       Text('Title: ${playerContext.title}'),
-  //       Text('Subtitle: ${playerContext.subtitle}'),
-  //       Text('Type: ${playerContext.type}'),
-  //       Text('Uri: ${playerContext.uri}'),
-  //     ],
-  //   );
-  // }
 
   Widget buildPlayerContextWidget() {
     return StreamBuilder<PlayerContext>(
@@ -82,29 +92,98 @@ class AuthManager extends StatelessWidget {
       initialData: PlayerContext('', '', '', ''),
       builder: (BuildContext context, AsyncSnapshot<PlayerContext> snapshot) {
         var playerContext = snapshot.data;
-        log('data: This is what player context.title is as well as subtitle ${playerContext!.title}');
+        log('data: This log file is inside buildplayercontextwidget and below is the playercontext?titlesubtitle, type, and uri  $snapshot');
 
-        if (playerContext == null) {
-          log('data: THIS MEANS THAT PLAYERCONTEXTIS EMPTY!!!! $playerContext');
-
-          return const Center(
-            child: Text('Not connected'),
-          );
-        }
-
-        // return Text(
-        //  'data'); //Rebaneado: I have to figure out what goes next here
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Title: ${playerContext.title}'),
-            Text('Subtitle: ${playerContext.subtitle}'),
-            Text('Type: ${playerContext.type}'),
-            Text('Uri: ${playerContext.uri}'),
+            Text(
+                '============================================================================================================================='),
+            Text('Title: ${playerContext?.title}'),
+            Text('Subtitle: ${playerContext?.subtitle}'),
+            Text('Type: ${playerContext?.type}'),
+            Text('Uri: ${playerContext?.uri}'),
           ],
         );
       },
     );
+  }
+
+  Future<void> checkIfAppIsActive(BuildContext context) async {
+    try {
+      var isActive = await SpotifySdk.isSpotifyAppActive;
+      final snackBar = SnackBar(
+          content: Text(isActive
+              ? 'Spotify app connection is active (currently playing)'
+              : 'Spotify app connection is not active (currently not playing)'));
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> connectToSpotifyRemote() async {
+    try {
+      // setState(() {
+      //   _loading = true;
+      // });
+      var result = await SpotifySdk.connectToSpotifyRemote(
+          clientId: dotenv.env['ca721ff887074f0699d961c2c1f32bd9'].toString(),
+          redirectUrl: dotenv
+              .env['spotify-login-sdk-test-app://spotify-login-callback']
+              .toString());
+
+      setStatus(result
+          ? 'connect to spotify successful'
+          : 'connect to spotify failed');
+      // setState(() {
+      //   _loading = false;
+      // });
+    } on PlatformException catch (e) {
+      _loading = false;
+
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      _loading = false;
+
+      setStatus('not implemented');
+    }
+  }
+//i need to compare what im callin in between this one and the one below it
+  // Future<void> queue() async {
+  //   try {
+  //     await SpotifySdk.queue(
+  //         spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+  //   } on PlatformException catch (e) {
+  //     setStatus(e.code, message: e.message);
+  //   } on MissingPluginException {
+  //     setStatus('not implemented');
+  //   }
+  // }
+
+  // Future<void> queueSong(tempSong) async {
+  //   try {
+  //     await SpotifySdk.queue(
+  //         //String soptify
+  //         spotifyUri: tempSong);
+  //   } on PlatformException catch (e) {
+  //     //setStatus(e.code, message: e.message);
+  //   } on MissingPluginException {
+  //     // setStatus('not implemented');
+  //   }
+  // }
+
+  ///MARK: after this below line i am implemention from my previous working searching option
+  ///
+  ///
+  ///
+
+  void setStatus(String code, {String? message}) {
+    var text = message ?? '';
+    logger.i('$code$text');
   }
 }

@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/home_view.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
   final _formKey = GlobalKey<FormState>();
+
   String username = "";
+
   String password = "";
+
   String emaill = "";
 
   @override

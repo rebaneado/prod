@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
     return CupertinoApp(
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      // ! updated this to comment out homepage and i am putting in login page instead
+
+      // home: MyHomePage(),
+      home: LoginView(),
     );
   }
 }

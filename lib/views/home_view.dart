@@ -1,14 +1,18 @@
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:prod/model/song_model.dart';
 import 'package:prod/widgets/title_widget.dart';
 import 'package:spotify_sdk/models/image_uri.dart';
+import 'package:spotify_sdk/models/player_state.dart';
 import 'package:spotify_sdk/platform_channels.dart';
 import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:prod/managers/auth_manager.dart';
+import 'package:logger/logger.dart';
 
 class HomePageView extends StatefulWidget {
   HomePageView({Key? key}) : super(key: key);
@@ -20,6 +24,19 @@ class HomePageView extends StatefulWidget {
 
 class _HomeViewState extends State<HomePageView> {
   Queue<Song> songList = Queue<Song>();
+  bool _connected = false;
+  late ImageUri? currentTrackImageUri;
+  Logger logger = Logger(
+    //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
+    printer: PrettyPrinter(
+      methodCount: 2, // number of method calls to be displayed
+      errorMethodCount: 8, // number of method calls if stacktrace is provided
+      lineLength: 120, // width of the output
+      colors: true, // Colorful log messages
+      printEmojis: true, // Print an emoji for each log message
+      printTime: true,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +49,14 @@ class _HomeViewState extends State<HomePageView> {
             children: [
               titleSection,
               currentSongTitle(),
-              AuthManager(),
 
               ///TODO: this should be a button to be pressed instead of running automaticallhy
+              //implenebnt TODO: create a whole button for authg manager
+              AuthManager(),
+              //clickButton(), // i did the template
               songInformation(),
+              buildPlayerStateWidget()
+              //AuthManager()
               //spotifyImageWidget(SpotifySdk.getImage(imageUri: Player)),
 
               // Playlist(),
@@ -59,6 +80,30 @@ class _HomeViewState extends State<HomePageView> {
       print('This is if its not empty');
       return Text('Song Playing: $currentSongName');
     }
+  }
+
+  Widget clickButton() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: ElevatedButton(
+          onPressed: () {
+            //songList.add()
+            //print('So this is the updated song name thing aparently $songName');
+            //getSearchedSongInfo();
+            AuthManager();
+            print(' so this is auth manager running>????? ');
+            // if (_formKey.currentState!.validate()) {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) =>
+            //           HomePageView(), //TODO::::------------------------------------------
+            //     ),
+            //   );
+            // }
+          },
+          child: const Text('Connect to auth manager')),
+    );
   }
 
 //this widget is specifically for getting the image of the song
@@ -89,17 +134,179 @@ class _HomeViewState extends State<HomePageView> {
         });
   }
 
+  Widget buildPlayerStateWidget() {
+    return StreamBuilder<PlayerState>(
+      stream: SpotifySdk.subscribePlayerState(),
+      builder: (BuildContext context, AsyncSnapshot<PlayerState> snapshot) {
+        var track = snapshot.data?.track;
+        currentTrackImageUri = track?.imageUri;
+        var playerState = snapshot.data;
+        log('This is buildplayerstatewidget track snapshot... i ownder why this does work and the other does not: ${track!.name}'); //THIS WORKS AND I CAN GRAB RIGHT HERE!!!!!!!!!!!!
+
+        // if (playerState == null || track == null) {
+        //   return Center(
+        //     child: Container(),
+        //   );
+        // }
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: <Widget>[
+            //     SizedIconButton(
+            //       width: 50,
+            //       icon: Icons.skip_previous,
+            //       onPressed: skipPrevious,
+            //     ),
+            //     playerState.isPaused
+            //         ? SizedIconButton(
+            //             width: 50,
+            //             icon: Icons.play_arrow,
+            //             onPressed: resume,
+            //           )
+            //         : SizedIconButton(
+            //             width: 50,
+            //             icon: Icons.pause,
+            //             onPressed: pause,
+            //           ),
+            //     SizedIconButton(
+            //       width: 50,
+            //       icon: Icons.skip_next,
+            //       onPressed: skipNext,
+            //     ),
+            //   ],
+            // ),
+            Text(
+                '${track.name} by ${track.artist.name} from the album ${track.album.name}'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Playback speed: ${playerState?.playbackSpeed}'),
+                Text(
+                    'Progress: ${playerState?.playbackPosition}ms/${track.duration}ms'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Paused: ${playerState?.isPaused}'),
+                Text('Shuffling: ${playerState?.playbackOptions.isShuffling}'),
+              ],
+            ),
+            Text('RepeatMode: ${playerState?.playbackOptions.repeatMode}'),
+            Text('Image URI: ${track.imageUri.raw}'),
+            Text('Is episode? ${track.isEpisode}'),
+            Text('Is podcast? ${track.isPodcast}'),
+            _connected
+                ? spotifyImageWidget(track.imageUri)
+                : const Text('Connect to see an image...'),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     const Divider(),
+            //     const Text(
+            //       'Set Shuffle and Repeat',
+            //       style: TextStyle(fontSize: 16),
+            //     ),
+            //     Row(
+            //       children: [
+            //         const Text(
+            //           'Repeat Mode:',
+            //         ),
+            //         DropdownButton<RepeatMode>(
+            //           value: RepeatMode
+            //               .values[playerState.playbackOptions.repeatMode.index],
+            //           items: const [
+            //             DropdownMenuItem(
+            //               value: RepeatMode.off,
+            //               child: Text('off'),
+            //             ),
+            //             DropdownMenuItem(
+            //               value: RepeatMode.track,
+            //               child: Text('track'),
+            //             ),
+            //             DropdownMenuItem(
+            //               value: RepeatMode.context,
+            //               child: Text('context'),
+            //             ),
+            //           ],
+            //           onChanged: (repeatMode) => setRepeatMode(repeatMode!),
+            //         ),
+            //       ],
+            //     ),
+            //     Row(
+            //       children: [
+            //         const Text('Set shuffle: '),
+            //         Switch.adaptive(
+            //           value: playerState.playbackOptions.isShuffling,
+            //           onChanged: (bool shuffle) => setShuffle(
+            //             shuffle,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ],
+            // ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future getPlayerState() async {
+    try {
+      return await SpotifySdk.getPlayerState();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  void setStatus(String code, {String? message}) {
+    var text = message ?? '';
+    logger.i('$code$text');
+  }
+
   Widget songInformation() {
+    MethodNames.getPlayerState;
+
     return Column(
 
-        // Text('RepeatMode: ${playerState.playbackOptions.repeatMode}'),
-        // Text('Image URI: ${track.imageUri.raw}'),
-        // Text('Is episode? ${track.isEpisode}'),
-        // Text('Is podcast? ${track.isPodcast}'),
+        //  print('Track:\n'
+        //         'id: ${item.id}\n'
+        //         'name: ${item.name}\n'
+        //         'href: ${item.href}\n'
+        //         'type: ${item.type}\n'
+        //         'uri: ${item.uri}\n'
+        //         'isPlayable: ${item.isPlayable}\n'
+        //         'artists: ${item.artists!.length}\n'
+        //         'availableMarkets: ${item.availableMarkets!.length}\n'
+        //         'discNumber: ${item.discNumber}\n'
+        //         'trackNumber: ${item.trackNumber}\n'
+        //         'explicit: ${item.explicit}\n'
+        //         '-------------------------------');
+
+        ///TODO HERE
+        // mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        // children: <Widget>[
+        //   Text('Title: ${playerContext.title}'),
+        //   Text('Subtitle: ${playerContext.subtitle}'),
+        //   Text('Type: ${playerContext.type}'),
+        //   Text('Uri: ${playerContext.uri}'),
+        // ],
         );
   }
 }
 
+// class DisplaySong(){
+
+//   String d = 'd';
+// }
 
 // class Playlist extends StatelessWidget {
 //   const Playlist({Key? key}) : super(key: key);
