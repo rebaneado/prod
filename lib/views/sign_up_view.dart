@@ -114,7 +114,7 @@ class _SignUpViewState extends State<SignUpView> {
               ),
             );
           }
-          print('this is username: $email');
+          //print('this is username: $email');
           print('this is the password: $password');
           context.read<AuthService>().signUp(email: email, password: password);
         },
