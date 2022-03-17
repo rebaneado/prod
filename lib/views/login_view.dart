@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prod/main.dart';
+import 'package:prod/managers/fire_auth.dart';
 import 'package:prod/views/sign_up_view.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -25,7 +28,7 @@ class LoginScaffoldState extends State<LoginScaffold> {
   final _formKey = GlobalKey<FormState>();
   String username = "";
   String password = "";
-  String emaill = "";
+  String email = "";
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class LoginScaffoldState extends State<LoginScaffold> {
           padding: EdgeInsets.symmetric(horizontal: 40),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [_userNameField(), _passwordField(), _loginButton()]),
+              children: [_emailField(), _passwordField(), _loginButton()]),
         ));
   } // end of loginForm Widget
 
@@ -66,7 +69,7 @@ class LoginScaffoldState extends State<LoginScaffold> {
             }));
   }
 
-  Widget _userNameField() {
+  Widget _emailField() {
     return TextFormField(
       decoration: InputDecoration(
         icon: Icon(Icons.person),
@@ -79,7 +82,7 @@ class LoginScaffoldState extends State<LoginScaffold> {
         return null;
       },
       onChanged: (value) {
-        username = value;
+        email = value;
       },
     );
   }
@@ -110,14 +113,20 @@ class LoginScaffoldState extends State<LoginScaffold> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Processing Data')),
             );
+            context
+                .read<AuthService>()
+                .signIn(email: email, password: password);
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => SignUpView(),
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AuthCheck(),
+              ),
+            );
           }
+          print('this is username: $email');
+          print('this is the password: $password');
+          context.read<AuthService>().signIn(email: email, password: password);
         },
         child: const Text('Login'));
   }

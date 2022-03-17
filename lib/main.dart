@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prod/managers/fire_auth.dart';
 import 'package:prod/views/home_view.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/profile_view.dart';
 import 'package:prod/views/search_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,15 +18,25 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      // Remove the debug banner
-      debugShowCheckedModeBanner: false,
-      // ! updated this to comment out homepage and i am putting in login page instead
-      //! commented out login view 2nd round to create a class so that it indicates if user is logged in
+    return MultiProvider(
+      providers: [
+        Provider<AuthService>(
+            create: (_) =>
+                AuthService(FirebaseAuth.instance)), //This is provider first
+        StreamProvider(
+            create: (context) => context.read<AuthService>().authStateChange,
+            initialData: null)
+      ],
+      child: CupertinoApp(
+        // Remove the debug banner
+        debugShowCheckedModeBanner: false,
+        // ! updated this to comment out homepage and i am putting in login page instead
+        //! commented out login view 2nd round to create a class so that it indicates if user is logged in
 
-      // home: MyHomePage(),
-      //home: LoginView(),
-      home: AuthCheck(),
+        // home: MyHomePage(),
+        //home: LoginView(),
+        home: AuthCheck(),
+      ),
     );
   }
 }
@@ -31,7 +44,13 @@ class MyApp extends StatelessWidget {
 class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final firebaseUser = context.watch<User?>();
+    if (firebaseUser != null) {
+      //return Text("Signed in ");
+      return MyHomePage();
+    }
+    return LoginView();
+    //return Text("Not Signed in");
   }
 }
 
