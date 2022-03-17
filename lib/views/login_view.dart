@@ -124,9 +124,9 @@ class LoginScaffoldState extends State<LoginScaffold> {
               ),
             );
           }
-          print('this is username: $email');
-          print('this is the password: $password');
-          context.read<AuthService>().signIn(email: email, password: password);
+          // print('this is username: $email');
+          // print('this is the password: $password');
+          // context.read<AuthService>().signIn(email: email, password: password);
         },
         child: const Text('Login'));
   }

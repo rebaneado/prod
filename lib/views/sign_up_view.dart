@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:prod/managers/fire_auth.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/home_view.dart';
+import 'package:provider/provider.dart';
 
 class SignUpView extends StatefulWidget {
   @override
@@ -14,7 +16,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   String password = "";
 
-  String emaill = "";
+  String email = "";
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class _SignUpViewState extends State<SignUpView> {
         return null;
       },
       onChanged: (value) {
-        emaill = value;
+        email = value;
       },
     );
   }
@@ -111,6 +113,9 @@ class _SignUpViewState extends State<SignUpView> {
               ),
             );
           }
+          print('this is username: $email');
+          print('this is the password: $password');
+          context.read<AuthService>().signIn(email: email, password: password);
         },
         child: const Text('Login'));
   }
