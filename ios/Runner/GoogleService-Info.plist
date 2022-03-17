@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>925483373699-j1tcmp0k6rq3mpmfu2jiidkp8kibf9pg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.925483373699-j1tcmp0k6rq3mpmfu2jiidkp8kibf9pg</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD05OoCXF3xoiRvxaVVmaJWpt9xLti54fA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>925483373699</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>rebaneado.prod</string>
+	<key>PROJECT_ID</key>
+	<string>millionare-cc427</string>
+	<key>STORAGE_BUCKET</key>
+	<string>millionare-cc427.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:925483373699:ios:34a046e5ba9d8cfe8177b6</string>
+</dict>
+</plist>

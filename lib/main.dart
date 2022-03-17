@@ -4,8 +4,11 @@ import 'package:prod/views/home_view.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/profile_view.dart';
 import 'package:prod/views/search_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -16,10 +19,19 @@ class MyApp extends StatelessWidget {
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
       // ! updated this to comment out homepage and i am putting in login page instead
+      //! commented out login view 2nd round to create a class so that it indicates if user is logged in
 
       // home: MyHomePage(),
-      home: LoginView(),
+      //home: LoginView(),
+      home: AuthCheck(),
     );
+  }
+}
+
+class AuthCheck extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
