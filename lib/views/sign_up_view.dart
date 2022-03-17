@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prod/main.dart';
 import 'package:prod/managers/fire_auth.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/home_view.dart';
@@ -109,15 +110,15 @@ class _SignUpViewState extends State<SignUpView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomePageView(),
+                builder: (context) => AuthCheck(),
               ),
             );
           }
           print('this is username: $email');
           print('this is the password: $password');
-          context.read<AuthService>().signIn(email: email, password: password);
+          context.read<AuthService>().signUp(email: email, password: password);
         },
-        child: const Text('Login'));
+        child: const Text('Sign Up bro :) '));
   }
 
   Widget _showLoginButton(BuildContext context) {
