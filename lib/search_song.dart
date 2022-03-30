@@ -79,7 +79,7 @@ class _SpotifySearchState extends State<SpotifySearch> {
                   child: CupertinoTextFormFieldRow(
                       placeholder: "Enter song name",
                       onChanged: (value) {
-                        this.songString = value;
+                        songString = value;
 
                         //insert the value to the method here
                       }),
@@ -89,7 +89,7 @@ class _SpotifySearchState extends State<SpotifySearch> {
                       placeholder: "Enter artists",
                       obscureText: true,
                       onChanged: (value) {
-                        this.artistsString = value;
+                        artistsString = value;
                       }),
                   prefix: "Passowrd".text.make())
             ],
@@ -200,35 +200,6 @@ class _SpotifySearchState extends State<SpotifySearch> {
     //tempToken = MethodNames.getAuthenticationToken;
     var spotify = SpotifyApi(credentials);
 
-    // print('\nPodcast:');
-    // var podcast = await spotify.shows.get('4AlxqGkkrqe0mfIx3Mi7Xt');
-    // print(podcast.name);
-
-    // print('\nPodcast episode:');
-    // var episodes = await spotify.shows.episodes('4AlxqGkkrqe0mfIx3Mi7Xt');
-    // var firstEpisode = (await episodes.first()).items!.first;
-    // print(firstEpisode.name);
-
-    // print('Artists:');
-    // var artists = await spotify.artists.list(['0OdUWJ0sBjDrqHygGUXeCF']);
-    // artists.forEach((x) => print(x.name));
-
-    // print('\nAlbum:');
-    // var album = await spotify.albums.get('2Hog1V8mdTWKhCYqI5paph');
-    // print(album.name);
-
-    // print('\nAlbum Tracks:');
-    // var tracks = await spotify.albums.getTracks(album.id!).all();
-    // tracks.forEach((track) {
-    //   print(track.name);
-    // });
-
-    // print('\nFeatured Playlist:');
-    // var featuredPlaylists = await spotify.playlists.featured.all();
-    // featuredPlaylists.forEach((playlist) {
-    //   print(playlist.name);
-    // });
-
     print("\nSearching for \'Mecleartallica\':");
     var search = await spotify.search
         .get(songString)
@@ -239,30 +210,6 @@ class _SpotifySearchState extends State<SpotifySearch> {
     }
     search.forEach((pages) {
       pages.items!.forEach((item) {
-        // if (item is PlaylistSimple) {
-        //   print('Playlist: \n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}:\n'
-        //       'collaborative: ${item.collaborative}\n'
-        //       'href: ${item.href}\n'
-        //       'trackslink: ${item.tracksLink!.href}\n'
-        //       'owner: ${item.owner}\n'
-        //       'public: ${item.owner}\n'
-        //       'snapshotId: ${item.snapshotId}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       'images: ${item.images!.length}\n'
-        //       '-------------------------------');
-        // }
-        // if (item is Artist) {
-        //   print('Artist: \n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}\n'
-        //       'href: ${item.href}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       '-------------------------------');
-        // }
         if (item is TrackSimple) {
           searchedSongURI = '${item.uri}';
           tempSong = searchedSongURI;
@@ -285,33 +232,19 @@ class _SpotifySearchState extends State<SpotifySearch> {
               'explicit: ${item.explicit}\n'
               '-------------------------------');
         }
-        // if (item is AlbumSimple) {
-        //   print('Album:\n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}\n'
-        //       'href: ${item.href}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       'albumType: ${item.albumType}\n'
-        //       'artists: ${item.artists!.length}\n'
-        //       'availableMarkets: ${item.availableMarkets!.length}\n'
-        //       'images: ${item.images!.length}\n'
-        //       'releaseDate: ${item.releaseDate}\n'
-        //       'releaseDatePrecision: ${item.releaseDatePrecision}\n'
-        //       '-------------------------------');
-        // }
       });
     });
 
     // var relatedArtists =
     //     await spotify.artists.relatedArtists('0OdUWJ0sBjDrqHygGUXeCF');
     // print('\nRelated Artists: ${relatedArtists.length}');
+//! commenting this out because i dont thik this is doing anything 3/30/22
 
-    credentials = await spotify.getCredentials();
-    print('\nCredentials:');
-    print('Client Id: ${credentials.clientId}');
-    print('Access Token: ${credentials.accessToken}');
-    print('Credentials Expired: ${credentials.isExpired}');
+    // credentials = await spotify.getCredentials();
+    // print('\nCredentials:');
+    // print('Client Id: ${credentials.clientId}');
+    // print('Access Token: ${credentials.accessToken}');
+    // print('Credentials Expired: ${credentials.isExpired}');
   }
 
   Future<void> queueSong(tempSong) async {

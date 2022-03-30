@@ -49,14 +49,15 @@ class _HomeViewState extends State<HomePageView> {
             children: [
               titleSection,
               currentSongTitle(),
-
-              ///TODO: this should be a button to be pressed instead of running automaticallhy
-              //implenebnt TODO: create a whole button for authg manager
               AuthManager(),
+
+              ///TODO: this should be a button to be pressed instead of running automaticallhy so it authenticates when i want it to
+              //implenebnt TODO: create a whole button for authg manager
+
               //clickButton(), // i did the template
               songInformation(),
               buildPlayerStateWidget()
-              //AuthManager()
+
               //spotifyImageWidget(SpotifySdk.getImage(imageUri: Player)),
 
               // Playlist(),
@@ -104,6 +105,12 @@ class _HomeViewState extends State<HomePageView> {
           },
           child: const Text('Connect to auth manager')),
     );
+
+    //  ElevatedButton(
+    //               onPressed: () {
+    //                 AuthManager();
+    //               },
+    //               child: Text('con'))
   }
 
 //this widget is specifically for getting the image of the song
@@ -141,7 +148,7 @@ class _HomeViewState extends State<HomePageView> {
         var track = snapshot.data?.track;
         currentTrackImageUri = track?.imageUri;
         var playerState = snapshot.data;
-        log('This is buildplayerstatewidget track snapshot... i ownder why this does work and the other does not: ${track!.name}'); //THIS WORKS AND I CAN GRAB RIGHT HERE!!!!!!!!!!!!
+        log('data: This is buildplayerstatewidget track snapshot... i ownder why this does work and the other does not: ${track?.name}'); //THIS WORKS AND I CAN GRAB RIGHT HERE!!!!!!!!!!!!
 
         // if (playerState == null || track == null) {
         //   return Center(
@@ -180,13 +187,13 @@ class _HomeViewState extends State<HomePageView> {
             //   ],
             // ),
             Text(
-                '${track.name} by ${track.artist.name} from the album ${track.album.name}'),
+                '${track?.name} by ${track?.artist.name} from the album ${track?.album.name}'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Playback speed: ${playerState?.playbackSpeed}'),
                 Text(
-                    'Progress: ${playerState?.playbackPosition}ms/${track.duration}ms'),
+                    'Progress: ${playerState?.playbackPosition}ms/${track?.duration}ms'),
               ],
             ),
             Row(
@@ -197,11 +204,11 @@ class _HomeViewState extends State<HomePageView> {
               ],
             ),
             Text('RepeatMode: ${playerState?.playbackOptions.repeatMode}'),
-            Text('Image URI: ${track.imageUri.raw}'),
-            Text('Is episode? ${track.isEpisode}'),
-            Text('Is podcast? ${track.isPodcast}'),
+            Text('Image URI: ${track?.imageUri.raw}'),
+            Text('Is episode? ${track?.isEpisode}'),
+            Text('Is podcast? ${track?.isPodcast}'),
             _connected
-                ? spotifyImageWidget(track.imageUri)
+                ? spotifyImageWidget(track!.imageUri)
                 : const Text('Connect to see an image...'),
             // Column(
             //   crossAxisAlignment: CrossAxisAlignment.start,

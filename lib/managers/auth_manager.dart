@@ -12,10 +12,18 @@ import 'package:spotify_sdk/spotify_sdk.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class AuthManager extends StatelessWidget {
+class AuthManager extends StatefulWidget {
   AuthManager({Key? key}) : super(key: key);
+
+  @override
+  State<AuthManager> createState() => _AuthManagerState();
+}
+
+class _AuthManagerState extends State<AuthManager> {
   bool _loading = false;
+
   late String searchedSongURI, tempSong;
+
   late String songString, artistsString;
 
   Logger logger = Logger(
@@ -153,29 +161,6 @@ class AuthManager extends StatelessWidget {
       setStatus('not implemented');
     }
   }
-//i need to compare what im callin in between this one and the one below it
-  // Future<void> queue() async {
-  //   try {
-  //     await SpotifySdk.queue(
-  //         spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
-  //   } on PlatformException catch (e) {
-  //     setStatus(e.code, message: e.message);
-  //   } on MissingPluginException {
-  //     setStatus('not implemented');
-  //   }
-  // }
-
-  // Future<void> queueSong(tempSong) async {
-  //   try {
-  //     await SpotifySdk.queue(
-  //         //String soptify
-  //         spotifyUri: tempSong);
-  //   } on PlatformException catch (e) {
-  //     //setStatus(e.code, message: e.message);
-  //   } on MissingPluginException {
-  //     // setStatus('not implemented');
-  //   }
-  // }
 
   ///MARK: after this below line i am implemention from my previous working searching option
   ///

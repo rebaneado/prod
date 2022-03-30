@@ -105,8 +105,8 @@ class SearchScaffoldState extends State<SearchScaffold> {
           return null;
         },
         onChanged: (value) {
-          this.songName = value;
-          this.songString = songName;
+          songName = value;
+          songString = songName;
           //print('THIS IS NOT AWAITING SHIT $songName');
         },
       ),
@@ -185,6 +185,10 @@ class SearchScaffoldState extends State<SearchScaffold> {
             print('So this is the updated song name thing aparently $songName');
             getSearchedSongInfo();
 
+//? this is ! what i neeed to replace
+
+//! TODO: I need to replace the navigator push to home page to something else - either 1. pop instead od push home page or somehting to display
+//the songs playing
             if (_formKey.currentState!.validate()) {
               Navigator.push(
                 context,
@@ -224,9 +228,12 @@ class SearchScaffoldState extends State<SearchScaffold> {
       await SpotifySdk.queue(
           //String soptify
           spotifyUri: tempSong);
+      print('This means that queue went succescully');
     } on PlatformException catch (e) {
+      print('This means that queue went bad -1');
       setStatus(e.code, message: e.message);
     } on MissingPluginException {
+      print('This means that queue went bad');
       setStatus('not implemented');
     }
   }
@@ -247,35 +254,8 @@ class SearchScaffoldState extends State<SearchScaffold> {
     // var spotify = SpotifyApi(credentials);// this is also it
 
     // // print('\nPodcast:');
-    // var podcast = await spotify.shows.get('4AlxqGkkrqe0mfIx3Mi7Xt');
-    // print(podcast.name);
 
-    // print('\nPodcast episode:');
-    // var episodes = await spotify.shows.episodes('4AlxqGkkrqe0mfIx3Mi7Xt');
-    // var firstEpisode = (await episodes.first()).items!.first;
-    // print(firstEpisode.name);
-
-    // print('Artists:');
-    // var artists = await spotify.artists.list(['0OdUWJ0sBjDrqHygGUXeCF']);
-    // artists.forEach((x) => print(x.name));
-
-    // print('\nAlbum:');
-    // var album = await spotify.albums.get('2Hog1V8mdTWKhCYqI5paph');
-    // print(album.name);
-
-    // print('\nAlbum Tracks:');
-    // var tracks = await spotify.albums.getTracks(album.id!).all();
-    // tracks.forEach((track) {
-    //   print(track.name);
-    // });
-
-    // print('\nFeatured Playlist:');
-    // var featuredPlaylists = await spotify.playlists.featured.all();
-    // featuredPlaylists.forEach((playlist) {
-    //   print(playlist.name);
-    // });
-
-    print("\nSearching for \'Mecleartallica\':");
+    print('\nSearching for : $songString');
     var search = await spotify.search
         .get(songString)
         .first(1)
@@ -286,30 +266,6 @@ class SearchScaffoldState extends State<SearchScaffold> {
     }
     search.forEach((pages) {
       pages.items!.forEach((item) {
-        // if (item is PlaylistSimple) {
-        //   print('Playlist: \n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}:\n'
-        //       'collaborative: ${item.collaborative}\n'
-        //       'href: ${item.href}\n'
-        //       'trackslink: ${item.tracksLink!.href}\n'
-        //       'owner: ${item.owner}\n'
-        //       'public: ${item.owner}\n'
-        //       'snapshotId: ${item.snapshotId}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       'images: ${item.images!.length}\n'
-        //       '-------------------------------');
-        // }
-        // if (item is Artist) {
-        //   print('Artist: \n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}\n'
-        //       'href: ${item.href}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       '-------------------------------');
-        // }
         if (item is TrackSimple) {
           searchedSongURI = '${item.uri}';
           tempSong = searchedSongURI;
@@ -336,21 +292,6 @@ class SearchScaffoldState extends State<SearchScaffold> {
               'explicit: ${item.explicit}\n'
               '-------------------------------');
         }
-        // if (item is AlbumSimple) {
-        //   print('Album:\n'
-        //       'id: ${item.id}\n'
-        //       'name: ${item.name}\n'
-        //       'href: ${item.href}\n'
-        //       'type: ${item.type}\n'
-        //       'uri: ${item.uri}\n'
-        //       'albumType: ${item.albumType}\n'
-        //       'artists: ${item.artists!.length}\n'
-        //       'availableMarkets: ${item.availableMarkets!.length}\n'
-        //       'images: ${item.images!.length}\n'
-        //       'releaseDate: ${item.releaseDate}\n'
-        //       'releaseDatePrecision: ${item.releaseDatePrecision}\n'
-        //       '-------------------------------');
-        // }
       });
     });
 
