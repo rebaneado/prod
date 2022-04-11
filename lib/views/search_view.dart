@@ -224,17 +224,20 @@ class SearchScaffoldState extends State<SearchScaffold> {
   }
 
   Future<void> queueSong(tempSong) async {
+    String newTempSong = tempSong.toString();
     try {
-      await SpotifySdk.queue(
-          //String soptify
-          spotifyUri: tempSong);
-      print('This means that queue went succescully');
+      await SpotifySdk.queue(spotifyUri: newTempSong);
+      print(
+          '----------------------------------------------------------------------------------------------This means that queue went succescully');
     } on PlatformException catch (e) {
-      print('This means that queue went bad -1');
+      print(
+          '----------------------------------------------------------------------------------------------This means that queue went bad -1');
       setStatus(e.code, message: e.message);
     } on MissingPluginException {
-      print('This means that queue went bad');
-      setStatus('not implemented');
+      print(
+          '----------------------------------------------------------------------------------------------This means that queue went bad');
+      setStatus(
+          '----------------------------------------------------------------------------------------------not implemented');
     }
   }
 
@@ -255,7 +258,7 @@ class SearchScaffoldState extends State<SearchScaffold> {
 
     // // print('\nPodcast:');
 
-    print('\nSearching for : $songString');
+    print('Searching for : $songString');
     var search = await spotify.search
         .get(songString)
         .first(1)
@@ -300,24 +303,25 @@ class SearchScaffoldState extends State<SearchScaffold> {
     // print('\nRelated Artists: ${relatedArtists.length}');
 
     credentials = await spotify.getCredentials();
-    print('\nCredentials:');
+    print(
+        '----------------------------------------------------------------------------------------------Credentials:');
     print('Client Id: ${credentials.clientId}');
     print('Access Token: ${credentials.accessToken}');
     print('Credentials Expired: ${credentials.isExpired}');
   }
+//! deleted the following because fcausing confusion
+  // void sendData(var sendDataVariable) {
+  //   String varName = sendDataVariable.name;
+  //   String artist = sendDataVariable.artists!.length;
+  //   String webURL = sendDataVariable.uri;
+  //   String songID = sendDataVariable.id;
+  //   String href = sendDataVariable.href;
+  //   String imageURI = sendDataVariable.type;
 
-  void sendData(var sendDataVariable) {
-    String varName = sendDataVariable.name;
-    String artist = sendDataVariable.artists!.length;
-    String webURL = sendDataVariable.uri;
-    String songID = sendDataVariable.id;
-    String href = sendDataVariable.href;
-    String imageURI = sendDataVariable.type;
+  //   SpotifySdk.getPlayerState();
 
-    SpotifySdk.getPlayerState();
-
-    Song tempSong = Song(varName, artist, webURL, songID, href, imageURI);
-  }
+  //   Song tempSong = Song(varName, artist, webURL, songID, href, imageURI);
+  // }
 
   void setStatus(String code, {String? message}) {
     var text = message ?? '';

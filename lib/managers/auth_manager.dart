@@ -52,7 +52,7 @@ class _AuthManagerState extends State<AuthManager> {
           redirectUrl:
               'spotify-login-sdk-test-app://spotify-login-callback'.toString(),
           scope: 'app-remote-control, '
-              //'user-modify-playback-state, '
+              'user-modify-playback-state, '
               'playlist-read-private, '
               'playlist-modify-public,user-read-currently-playing');
       setStatus('Got a token: $authentificationToken');

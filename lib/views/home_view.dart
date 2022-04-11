@@ -25,6 +25,8 @@ class HomePageView extends StatefulWidget {
 class _HomeViewState extends State<HomePageView> {
   Queue<Song> songList = Queue<Song>();
   bool _connected = false;
+  bool _loading = false;
+  bool result = false;
   late ImageUri? currentTrackImageUri;
   Logger logger = Logger(
     //filter: CustomLogFilter(), // custom logfilter can be used to have logs in release mode
@@ -38,6 +40,19 @@ class _HomeViewState extends State<HomePageView> {
     ),
   );
 
+  void connect() async {
+    setState(() {
+      _loading = true;
+    });
+    var result = await SpotifySdk.connectToSpotifyRemote(
+        clientId: "ca721ff887074f0699d961c2c1f32bd9",
+        redirectUrl: "spotify-login-sdk-test-app://spotify-login-callback");
+    _connected = true;
+
+    print('this is the result $result');
+    log('data: $result');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,11 +65,12 @@ class _HomeViewState extends State<HomePageView> {
               titleSection,
               currentSongTitle(),
               AuthManager(),
+//! auth manager is disabled here
 
               ///TODO: this should be a button to be pressed instead of running automaticallhy so it authenticates when i want it to
               //implenebnt TODO: create a whole button for authg manager
 
-              //clickButton(), // i did the template
+              clickButton(), // i did the template
               songInformation(),
               buildPlayerStateWidget()
 
@@ -91,7 +107,9 @@ class _HomeViewState extends State<HomePageView> {
             //songList.add()
             //print('So this is the updated song name thing aparently $songName');
             //getSearchedSongInfo();
-            AuthManager();
+            //AuthManager();
+            connect;
+
             print(' so this is auth manager running>????? ');
             // if (_formKey.currentState!.validate()) {
             //   Navigator.push(
