@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:prod/managers/auth_manager.dart';
 import 'package:prod/managers/fire_auth.dart';
 import 'package:prod/views/home_view.dart';
 import 'package:prod/views/login_view.dart';
@@ -62,7 +63,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _tabs = [
-    HomePageView(),
+    //! 4/11/22 - I replaced below HomePageView(),
+
+    AuthManager(),
     Profile(), // see the HomeTab class below
     SearchView() // see the SettingsTab class below
   ];

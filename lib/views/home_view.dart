@@ -64,7 +64,7 @@ class _HomeViewState extends State<HomePageView> {
             children: [
               titleSection,
               currentSongTitle(),
-              AuthManager(),
+              //AuthManager(),
 //! auth manager is disabled here
 
               ///TODO: this should be a button to be pressed instead of running automaticallhy so it authenticates when i want it to

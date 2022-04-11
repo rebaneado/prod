@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:spotify_sdk/models/connection_status.dart';
 //import 'package:spotify/spotify.dart'; //this one too this one was the latest maybe idk
 import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:spotify_sdk/models/player_context.dart';
@@ -22,6 +23,7 @@ class AuthManager extends StatefulWidget {
 class _AuthManagerState extends State<AuthManager> {
   bool _loading = false;
 
+  bool _connected = false;
   late String searchedSongURI, tempSong;
 
   late String songString, artistsString;
@@ -40,9 +42,69 @@ class _AuthManagerState extends State<AuthManager> {
 
   @override
   Widget build(BuildContext context) {
-    connectRemote();
+    //? made update here to create a scafforld object
+    return MaterialApp(
+      home: StreamBuilder<ConnectionStatus>(
+          stream: SpotifySdk.subscribeConnectionStatus(),
+          builder: (context, snapshot) {
+            _connected = false;
+            var data = snapshot.data;
+            if (data != null) {
+              _connected = data.connected;
+            }
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('SpotifySdk Example'),
+                actions: [
+                  _connected
+                      ? IconButton(
+                          onPressed: disconnect,
+                          icon: const Icon(Icons.exit_to_app),
+                        )
+                      : Container()
+                ],
+              ),
+              body: _architectureFlow(context),
+            );
+          }),
+    );
+
+    //!connectRemote();
     //ConnectRemote();
     return buildPlayerContextWidget();
+  } // this is build widget close brack
+
+  Widget _architectureFlow(BuildContext context) {
+    return Stack(
+      children: [
+        ListView(
+          padding: const EdgeInsets.all(9),
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                TextButton(
+                    onPressed: connectRemote,
+                    child: const Icon(Icons.settings_accessibility)),
+                const Divider(),
+                const Text(
+                  'Player Context',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                _connected
+                    ? buildPlayerContextWidget()
+                    : const Center(
+                        child: Text('Not connected'),
+                      ),
+              ],
+            )
+          ],
+        )
+      ],
+    );
   }
 
   Future<String> connectRemote() async {
@@ -162,10 +224,28 @@ class _AuthManagerState extends State<AuthManager> {
     }
   }
 
-  ///MARK: after this below line i am implemention from my previous working searching option
-  ///
-  ///
-  ///
+  Future<void> disconnect() async {
+    try {
+      setState(() {
+        _loading = true;
+      });
+      var result = await SpotifySdk.disconnect();
+      setStatus(result ? 'disconnect successful' : 'disconnect failed');
+      setState(() {
+        _loading = false;
+      });
+    } on PlatformException catch (e) {
+      setState(() {
+        _loading = false;
+      });
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setState(() {
+        _loading = false;
+      });
+      setStatus('not implemented');
+    }
+  }
 
   void setStatus(String code, {String? message}) {
     var text = message ?? '';
