@@ -190,13 +190,36 @@ class SearchScaffoldState extends State<SearchScaffold> {
 //! TODO: I need to replace the navigator push to home page to something else - either 1. pop instead od push home page or somehting to display
 //the songs playing
             if (_formKey.currentState!.validate()) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      HomePageView(), //TODO::::------------------------------------------
-                ),
-              );
+              showAlertDialog(BuildContext context) {
+                // set up the button
+                Widget okButton = FlatButton(
+                  child: Text("OK"),
+                  onPressed: () {},
+                );
+                // set up the AlertDialog
+                AlertDialog alert = AlertDialog(
+                  title: Text("My title"),
+                  content: Text("This is my message."),
+                  actions: [
+                    okButton,
+                  ],
+                );
+                // show the dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              }
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) =>
+              //         HomePageView(), //TODO::::------------------------------------------
+              //   ),
+              // );
             }
           },
           child: const Text('Search')),
