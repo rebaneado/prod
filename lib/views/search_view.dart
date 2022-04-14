@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:prod/model/song_model.dart';
@@ -185,34 +186,30 @@ class SearchScaffoldState extends State<SearchScaffold> {
             print('So this is the updated song name thing aparently $songName');
             getSearchedSongInfo();
 
-//? this is ! what i neeed to replace
-
-//! TODO: I need to replace the navigator push to home page to something else - either 1. pop instead od push home page or somehting to display
-//the songs playing
             if (_formKey.currentState!.validate()) {
-              showAlertDialog(BuildContext context) {
-                // set up the button
-                Widget okButton = FlatButton(
-                  child: Text("OK"),
-                  onPressed: () {},
-                );
-                // set up the AlertDialog
-                AlertDialog alert = AlertDialog(
-                  title: Text("My title"),
-                  content: Text("This is my message."),
-                  actions: [
-                    okButton,
+              showCupertinoDialog<void>(
+                context: context,
+                builder: (BuildContext context) => CupertinoAlertDialog(
+                  title: const Text('Song queued,Thanks.'),
+                  content:
+                      const Text('Go back to home page to view plaing songs'),
+                  actions: <CupertinoDialogAction>[
+                    CupertinoDialogAction(
+                      child: const Text('ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    CupertinoDialogAction(
+                      child: const Text('ok in blue'),
+                      isDestructiveAction: true,
+                      onPressed: () {
+                        // Do something destructive.
+                      },
+                    )
                   ],
-                );
-                // show the dialog
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return alert;
-                  },
-                );
-              }
-
+                ),
+              );
               // Navigator.push(
               //   context,
               //   MaterialPageRoute(

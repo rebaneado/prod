@@ -286,6 +286,9 @@ class _AuthManagerState extends State<AuthManager> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Text(
+                '${track.name} by ${track.artist.name} from the album ${track.album.name}'),
+
             _connected
                 ? spotifyImageWidget(track.imageUri)
                 : const Text('Connect to see an image...'),
