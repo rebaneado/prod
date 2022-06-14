@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prod/managers/auth_manager.dart';
 import 'package:prod/managers/fire_auth.dart';
+import 'package:prod/views/SecondAPP/second_home.dart';
 import 'package:prod/views/home_view.dart';
 import 'package:prod/views/login_view.dart';
 import 'package:prod/views/profile_view.dart';
@@ -46,11 +47,15 @@ class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
-    if (firebaseUser != null) {
+    if (firebaseUser != null && firebaseUser.email == "admin@rebaneado.com") {
       //return Text("Signed in ");
+      //! the user admin to be able to view the whole app is conditioned above - its admin@rebaneado.com
       return MyHomePage();
-    }
-    return LoginView();
+    } else if (firebaseUser != null) {
+      //this is for the every dat user
+      return SecondMain();
+    } else
+      return LoginView();
     //return Text("Not Signed in");
   }
 }

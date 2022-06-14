@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -261,6 +262,13 @@ class SearchScaffoldState extends State<SearchScaffold> {
     }
   }
 
+  final databaseRef =
+      FirebaseDatabase.instance.ref(); //database reference object
+
+  void addData(String data) {
+    databaseRef.push().set({'name': data, 'comment': 'A good season'});
+  }
+
   Future<void> getSearchedSongInfo() async {
     // var keyJson = await File('example/.apikeys').readAsString();
     // var keyMap = json.decode(keyJson);
@@ -292,6 +300,7 @@ class SearchScaffoldState extends State<SearchScaffold> {
         if (item is TrackSimple) {
           searchedSongURI = '${item.uri}';
           tempSong = searchedSongURI;
+          //! this is where i insert into database .
           queueSong(tempSong);
 
           // supplyDemmand = item;
