@@ -262,13 +262,6 @@ class SearchScaffoldState extends State<SearchScaffold> {
     }
   }
 
-  final databaseRef =
-      FirebaseDatabase.instance.ref(); //database reference object
-
-  void addData(String data) {
-    databaseRef.push().set({'name': data, 'comment': 'A good season'});
-  }
-
   Future<void> getSearchedSongInfo() async {
     // var keyJson = await File('example/.apikeys').readAsString();
     // var keyMap = json.decode(keyJson);
