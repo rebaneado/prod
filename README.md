@@ -1,6 +1,12 @@
 # Spotify-Connect
 
-A IOS/Android/Web Music based project designed with a full backend database allowing users to create/login/personalize their profiles.  The intent of this is to allow users to login and connect to receive and send information from the main admin Device(The Device that is playing music over the speakers). 
+This application was created with the Gym/Bar/Restaurant/Social-event and gathering scenario to allow all individuals present the ability tosubmit songs to the queue of the currentlly playing music from their own decices  without having access to the main device playing music. 
+
+
+A IOS/Android/Web Music based project designed with a full backend database allowing users to create/login/personalize their profiles. The intent of this effort is to allow users login and connect to the main admin Device(The Device that is playing music over the speakers at a public enviorment) and have the ability to sent/receive data to it.
+**MAIN  DEVICE PLAYING MUSIC **
+
+**USER ABILITIES**
 
 
 ## Getting Started
