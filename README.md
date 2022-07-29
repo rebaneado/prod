@@ -1,6 +1,7 @@
-# prod
+# Spotify-Connect
 
-A new Flutter project.
+A IOS/Android/Web Music based project designed with a full backend database allowing users to create/login/personalize their profiles.  The intent of this is to allow users to login and connect to receive and send information from the main admin Device(The Device that is playing music over the speakers). 
+
 
 ## Getting Started
 
