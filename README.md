@@ -24,9 +24,14 @@ A IOS/Android/Web Music based project designed with a full backend database allo
 
 
 ## Screenshots Demo
+User is promped to log in below or create account - once authenticated with google firebase, the process in the next video will initiate which is Authentification between spotify services and local app.  
+![Login Screen ](https://user-images.githubusercontent.com/36418354/181995379-80dc7581-49f0-4d71-a602-56b0fffd18c7.JPEG)
 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+https://user-images.githubusercontent.com/36418354/181995407-d7a81669-5c4a-4fdd-8d3a-b09a7746c064.mp4
+
+
+
 # Spotify-Connect
