@@ -16,7 +16,7 @@ A IOS/Android/Web Music based project designed with a full backend database allo
 **MAIN  DEVICE PLAYING MUSIC **
 - Full control of the music 
 - Send and receive requests straight from Spotify servers after AuthO2 has been completed.
-- 
+
 **USER ABILITIES**
 
 - See current track title playing, artwork, album,etc...
