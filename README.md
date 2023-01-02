@@ -1,5 +1,5 @@
 # Spotify-Connect
-
+Final project
 This application was created with the Gym/Bar/Restaurant/Social-event and gathering scenario to allow all individuals present the ability tosubmit songs to the queue of the currentlly playing music from their own decices  without having access to the main device playing music. 
 
 
