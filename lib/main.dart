@@ -52,8 +52,10 @@ class AuthCheck extends StatelessWidget {
       //! the user admin to be able to view the whole app is conditioned above - its admin@rebaneado.com
       return MyHomePage();
     } else if (firebaseUser != null) {
-      //this is for the every dat user
-      return SecondMain();
+      //this is for the every day user
+      //return SecondMain();//! this is correct - if the user is not admin then the user should be redirected to the 'second app....'
+      //!however: a easier alrenative would be to hide admin only funcitnoality
+      return MyHomePage();
     } else
       return LoginView();
     //return Text("Not Signed in");
@@ -71,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //! 4/11/22 - I replaced below HomePageView(),
 
     AuthManager(),
-    Profile(), // see the HomeTab class below
+    const Profile(), // see the HomeTab class below
     SearchView() // see the SettingsTab class below
   ];
 

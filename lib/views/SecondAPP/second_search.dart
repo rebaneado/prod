@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/animation.dart';
 
 class SecondSearchTab extends StatefulWidget {
@@ -74,22 +74,25 @@ class _SecondSearchTabState extends State<SecondSearchTab>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextFormField(
-                                    controller: budgetNameController,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                        icon: Icon(Icons.person),
-                                        hintText:
-                                            'idk bro... im exhausted clearly'),
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "WEB URL";
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      secondSongString = value;
-                                    },
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      controller: budgetNameController,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                          icon: Icon(Icons.person),
+                                          hintText:
+                                              'idk bro... im exhausted clearly'),
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "WEB URL";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        secondSongString = value;
+                                      },
+                                    ),
                                   )
                                 ],
                               ),
