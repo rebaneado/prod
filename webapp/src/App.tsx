@@ -8,6 +8,7 @@ import { ErgEngine } from "./erg/ergEngine";
 import type { RideRecording } from "./ride/types";
 import { useLibrary, type StoredWorkout } from "./state/library";
 import { useSettings } from "./state/settings";
+import { useStrava } from "./strava/useStrava";
 
 type View = "dashboard" | "ride" | "summary";
 
@@ -18,6 +19,7 @@ function App() {
 
   const { settings, setSettings } = useSettings();
   const { workouts, addWorkout, removeWorkout } = useLibrary();
+  const strava = useStrava();
 
   const [view, setView] = useState<View>("dashboard");
   const [activeWorkout, setActiveWorkout] = useState<StoredWorkout | null>(null);
@@ -80,6 +82,7 @@ function App() {
         </div>
       )}
       {connectError && <div className="error banner">{connectError}</div>}
+      {strava.error && <div className="error banner">{strava.error}</div>}
 
       <main className="app-main">
         {view === "dashboard" && (
@@ -94,6 +97,7 @@ function App() {
             addWorkout={addWorkout}
             removeWorkout={removeWorkout}
             onStartWorkout={handleStartWorkout}
+            strava={strava}
           />
         )}
 
@@ -101,7 +105,9 @@ function App() {
           <RideView engine={engineRef.current} workout={activeWorkout} onFinish={handleFinishRide} />
         )}
 
-        {view === "summary" && lastRecording && <SummaryView recording={lastRecording} onDone={handleDoneSummary} />}
+        {view === "summary" && lastRecording && (
+          <SummaryView recording={lastRecording} onDone={handleDoneSummary} strava={strava} />
+        )}
       </main>
     </div>
   );

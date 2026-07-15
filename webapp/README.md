@@ -16,9 +16,9 @@ Safari/WebKit, so this cannot run on iPhone/iPad.
   workout export) files — including ramps and repeated interval blocks.
 - Executes the workout, pushing target watts to the trainer as the workout
   progresses, and shows live power/cadence/heart-rate/target.
-- Records the ride and exports it as a real `.fit` activity file you can
-  drop onto your TrainingPeaks calendar (or upload to Strava/Garmin Connect,
-  if you already have those auto-forwarding into TrainingPeaks).
+- Records the ride and exports it as a real `.fit` activity file. Can upload
+  it straight to Strava with one click (see below), or you can just download
+  it and drop it onto your TrainingPeaks calendar.
 
 ## Why file-based sync instead of a "TrainingPeaks integration"
 
@@ -29,12 +29,43 @@ which isn't realistic for a personal project. Instead:
 - **Getting a workout in:** open the planned workout in TrainingPeaks and use
   "Send to Device" to export a `.fit` file (this is the same file Garmin/Wahoo
   head units use), or use a `.zwo` file directly. Import it here.
-- **Getting the ride back out:** after finishing, download the `.fit` activity
-  file this app generates and drop it onto the TrainingPeaks calendar to log
-  it.
+- **Getting the ride back out:** after finishing, upload straight to Strava
+  (see below), or download the `.fit` activity file this app generates and
+  drop it onto the TrainingPeaks calendar to log it manually.
 
 No API keys, no partner approval, and it still means you never have to
 manually re-type a workout or its results.
+
+## Automatic upload to Strava
+
+Unlike TrainingPeaks, **Strava's API is genuinely self-serve** — anyone can
+register a personal app instantly, no approval process. If you already have
+Strava → TrainingPeaks (or Garmin Connect → Strava → TrainingPeaks) auto-sync
+turned on, connecting Strava here makes the whole loop automatic.
+
+Setup:
+
+1. Go to <https://www.strava.com/settings/api> and create an app. Set
+   **Authorization Callback Domain** to `localhost`.
+2. Copy `.env.example` to `.env` and fill in the Client ID and Client Secret
+   from that page.
+3. Restart `npm run dev` (Vite only reads `.env` at startup).
+4. On the dashboard, click **Connect Strava** and approve access.
+5. After a ride, the summary screen gets an **Upload to Strava** button.
+
+**Security note:** this app has no backend — it's a static site you run
+locally. That means your Strava Client Secret ends up embedded in the
+JavaScript bundle the browser loads. That's fine for running it yourself
+locally, but never deploy a build of this app publicly (e.g. to a public
+URL) with real credentials baked in, and don't commit `.env` (it's
+gitignored already).
+
+Garmin Connect intentionally isn't integrated: unlike Strava, it has no
+self-serve API for individuals — the only way to automate a Garmin upload is
+an unofficial, reverse-engineered login that violates their Terms of Service
+and can break at any time. If your setup is Garmin-only, upload via Garmin
+Connect's own website/app, which can auto-forward to Strava/TrainingPeaks if
+you have that configured.
 
 ## Development
 
@@ -57,6 +88,8 @@ npm run lint     # oxlint
   time (handling ramps and %FTP conversion) and records samples.
 - `src/ride/` — ride recording types.
 - `src/state/` — `localStorage`-backed settings (FTP) and workout library.
+- `src/strava/` — Strava OAuth (`stravaAuth.ts`), upload + polling
+  (`stravaUpload.ts`), and a `useStrava` React hook.
 - `src/components/` — UI screens (dashboard, live ride, summary).
 
 ## Known limitations / things to double-check on real hardware
@@ -77,3 +110,7 @@ npm run lint     # oxlint
   logic was exercised against a simulated trainer, but real-hardware
   behavior (quirks in the Saris H3's FTMS implementation, timing, etc.)
   hasn't been confirmed firsthand.
+- The Strava OAuth + upload flow was exercised end-to-end against a mocked
+  Strava API (real request shapes, real UI state transitions), but hasn't
+  been run against Strava's actual servers with a real API app — the first
+  real "Connect Strava" click is the first live test of that handshake.

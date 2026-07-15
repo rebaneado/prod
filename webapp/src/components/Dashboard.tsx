@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { TrainerConnectionState } from "../ble/ftmsTrainer";
 import type { Settings } from "../state/settings";
 import type { StoredWorkout } from "../state/library";
+import type { StravaState } from "../strava/useStrava";
 import { workoutDurationSec } from "../workout/types";
 import { formatClock } from "../utils/format";
 import { importWorkoutFile } from "../workout/importWorkoutFile";
@@ -17,6 +18,7 @@ interface DashboardProps {
   addWorkout: (w: Awaited<ReturnType<typeof importWorkoutFile>>) => void;
   removeWorkout: (id: string) => void;
   onStartWorkout: (workout: StoredWorkout) => void;
+  strava: StravaState;
 }
 
 export function Dashboard({
@@ -30,6 +32,7 @@ export function Dashboard({
   addWorkout,
   removeWorkout,
   onStartWorkout,
+  strava,
 }: DashboardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -80,6 +83,36 @@ export function Dashboard({
             onChange={(e) => setSettings({ ...settings, ftpWatts: Number(e.target.value) || settings.ftpWatts })}
           />
         </label>
+      </section>
+
+      <section className="card">
+        <h2>Strava</h2>
+        {!strava.configured && (
+          <p className="hint">
+            Not set up yet. Create a free app at{" "}
+            <a href="https://www.strava.com/settings/api" target="_blank" rel="noreferrer">
+              strava.com/settings/api
+            </a>{" "}
+            and add its client id/secret to your local <code>.env</code> (see README) to enable automatic upload
+            after a ride.
+          </p>
+        )}
+        {strava.configured && (
+          <div className="connection-row">
+            {strava.connected ? (
+              <>
+                <span className="status-pill status-connected">Connected{strava.athleteName ? `: ${strava.athleteName}` : ""}</span>
+                <button type="button" onClick={strava.disconnect}>
+                  Disconnect
+                </button>
+              </>
+            ) : (
+              <button type="button" onClick={strava.connect} disabled={strava.exchanging}>
+                {strava.exchanging ? "Connecting..." : "Connect Strava"}
+              </button>
+            )}
+          </div>
+        )}
       </section>
 
       <section className="card">
